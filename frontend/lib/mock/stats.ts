@@ -1,0 +1,50 @@
+import { DashboardStat } from "../../types/types";
+
+export const MOCK_STATS: DashboardStat[] = [
+  {
+    id: "stat_1",
+    label: "Leads Processed",
+    value: "12,840",
+    change: "+12.5%",
+    trend: "up",
+    icon: "send",
+    iconBg: "bg-blue-50 text-blue-600",
+  },
+  {
+    id: "stat_2",
+    label: "Remaining Credits",
+    value: "650",
+    change: "PRO PLAN",
+    trend: "neutral",
+    icon: "zap",
+    iconBg: "bg-emerald-50 text-emerald-600",
+    isDynamicCredit: true,
+  },
+  {
+    id: "stat_3",
+    label: "Avg Personalization",
+    value: "92%",
+    change: "+4.2%",
+    trend: "up",
+    icon: "check-circle",
+    iconBg: "bg-amber-50 text-amber-600",
+  },
+  {
+    id: "stat_4",
+    label: "Email Quality",
+    value: "88%",
+    change: "+2.1%",
+    trend: "up",
+    icon: "star",
+    iconBg: "bg-purple-50 text-purple-600",
+  },
+  {
+    id: "stat_5",
+    label: "Active Campaigns",
+    value: "7",
+    change: "+1 this week",
+    trend: "up",
+    icon: "file-text",
+    iconBg: "bg-rose-50 text-rose-600",
+  },
+];
