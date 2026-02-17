@@ -1,4 +1,5 @@
 import { FEATURES } from "@/constants/landing";
+import * as LucideIcons from "lucide-react";
 
 export default function Features() {
     return (
@@ -17,22 +18,25 @@ export default function Features() {
                     </p>
                 </div>
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    {FEATURES.map((feature) => (
-                        <div
-                            key={feature.title}
-                            className="group p-8 rounded-2xl border border-gray-100 bg-background-light hover:border-primary/30 transition-all"
-                        >
-                            <span className="material-symbols-outlined text-primary text-4xl mb-6 block group-hover:scale-110 transition-transform">
-                                {feature.icon}
-                            </span>
-                            <h4 className="font-bold text-lg mb-3 font-display">
-                                {feature.title}
-                            </h4>
-                            <p className="text-sm text-gray-500 leading-relaxed">
-                                {feature.description}
-                            </p>
-                        </div>
-                    ))}
+                    {FEATURES.map((feature) => {
+                        const IconComponent = (LucideIcons as any)[feature.icon] || LucideIcons.HelpCircle;
+                        return (
+                            <div
+                                key={feature.title}
+                                className="group p-8 rounded-2xl border border-gray-100 bg-background-light hover:border-primary/30 transition-all"
+                            >
+                                <div className="text-primary mb-6 block group-hover:scale-110 transition-transform">
+                                    <IconComponent size={40} strokeWidth={1.5} />
+                                </div>
+                                <h4 className="font-bold text-lg mb-3 font-display">
+                                    {feature.title}
+                                </h4>
+                                <p className="text-sm text-gray-500 leading-relaxed">
+                                    {feature.description}
+                                </p>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
         </section>

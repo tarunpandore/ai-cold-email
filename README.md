@@ -55,7 +55,7 @@ ColdReply is a powerful AI-driven platform designed to streamline and enhance co
    ```
 
 3. **Explore the Dashboard**
-   Deployment Coming Soon
+   Deployed at https://ai-cold-email-psi.vercel.app/
 
 ## 📈 Current Progress
 

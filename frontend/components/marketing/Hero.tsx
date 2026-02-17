@@ -1,3 +1,5 @@
+import { Bolt, PlayCircle, Search, User, Sparkles, CheckCircle2 } from "lucide-react";
+
 export default function Hero() {
     return (
         <section className="relative overflow-hidden pt-20 pb-16 lg:pt-32 lg:pb-24">
@@ -5,7 +7,7 @@ export default function Hero() {
                 <div className="grid lg:grid-cols-2 gap-16 items-center">
                     <div className="flex flex-col gap-8">
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit">
-                            <span className="material-symbols-outlined text-sm">bolt</span>
+                            <Bolt size={14} />
                             AI-Powered Outreach
                         </div>
                         <h1 className="text-5xl lg:text-7xl font-black leading-tight tracking-tight text-gray-900">
@@ -24,7 +26,7 @@ export default function Hero() {
                                 Start Free Trial
                             </button>
                             <button className="h-14 px-8 bg-white border border-gray-200 rounded-xl font-bold text-lg flex items-center gap-2 hover:bg-gray-50 transition-all">
-                                <span className="material-symbols-outlined">play_circle</span>
+                                <PlayCircle size={24} />
                                 See Demo
                             </button>
                         </div>
@@ -45,9 +47,7 @@ export default function Hero() {
                             <div className="p-4 lg:p-6 grid grid-cols-2 gap-4 h-full min-h-[400px]">
                                 <div className="bg-gray-50 rounded-xl p-4 border border-gray-100 flex flex-col gap-4">
                                     <div className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-tighter">
-                                        <span className="material-symbols-outlined text-sm">
-                                            search
-                                        </span>{" "}
+                                        <Search size={14} />{" "}
                                         Prospect Research
                                     </div>
                                     <div className="space-y-3">
@@ -62,9 +62,7 @@ export default function Hero() {
                                         <div className="p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
                                             <div className="flex items-center gap-2 mb-2">
                                                 <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
-                                                    <span className="material-symbols-outlined text-[14px] text-primary">
-                                                        person
-                                                    </span>
+                                                    <User size={14} className="text-primary" />
                                                 </div>
                                                 <div className="text-[11px] font-bold">John Doe</div>
                                             </div>
@@ -77,18 +75,14 @@ export default function Hero() {
                                     </div>
                                     <div className="mt-auto">
                                         <button className="w-full py-2 bg-primary/10 text-primary text-[11px] font-bold rounded flex items-center justify-center gap-2">
-                                            <span className="material-symbols-outlined text-sm animate-spin">
-                                                auto_fix
-                                            </span>{" "}
+                                            <Sparkles size={14} className="animate-spin" />{" "}
                                             Crafting Opener...
                                         </button>
                                     </div>
                                 </div>
                                 <div className="bg-primary/5 rounded-xl p-4 border border-primary/10 flex flex-col gap-4 relative overflow-hidden">
                                     <div className="flex items-center gap-2 text-xs font-bold text-primary uppercase tracking-tighter">
-                                        <span className="material-symbols-outlined text-sm">
-                                            psychology
-                                        </span>{" "}
+                                        <Brain size={14} />{" "}
                                         AI Generation
                                     </div>
                                     <div className="space-y-3">
@@ -106,9 +100,7 @@ export default function Hero() {
                                             </p>
                                         </div>
                                         <div className="flex items-center gap-2 text-[10px] text-primary font-bold">
-                                            <span className="material-symbols-outlined text-[14px]">
-                                                done_all
-                                            </span>
+                                            <CheckCircle2 size={14} />
                                             Personalization Score: 98%
                                         </div>
                                     </div>
@@ -122,3 +114,7 @@ export default function Hero() {
         </section>
     );
 }
+
+// Fixed missing import in the replacement content
+import { Brain } from "lucide-react";
+

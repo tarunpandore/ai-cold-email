@@ -1,3 +1,5 @@
+import { ShieldAlert, Sparkles } from "lucide-react";
+
 export default function Solutions() {
     return (
         <section className="py-24 lg:py-32" id="solutions">
@@ -5,7 +7,7 @@ export default function Solutions() {
                 <div className="grid lg:grid-cols-2 gap-12 lg:gap-24">
                     <div className="p-8 lg:p-12 rounded-3xl bg-red-50 border border-red-100">
                         <div className="w-12 h-12 bg-red-100 text-red-600 rounded-xl flex items-center justify-center mb-6">
-                            <span className="material-symbols-outlined">block</span>
+                            <ShieldAlert size={28} />
                         </div>
                         <h3 className="text-2xl font-bold mb-4 font-display">
                             The Problem: Low Reply Rates
@@ -19,7 +21,7 @@ export default function Solutions() {
                     </div>
                     <div className="p-8 lg:p-12 rounded-3xl bg-primary/5 border border-primary/10">
                         <div className="w-12 h-12 bg-primary text-white rounded-xl flex items-center justify-center mb-6">
-                            <span className="material-symbols-outlined">auto_awesome</span>
+                            <Sparkles size={28} />
                         </div>
                         <h3 className="text-2xl font-bold mb-4 font-display">
                             The Solution: AI Personalization

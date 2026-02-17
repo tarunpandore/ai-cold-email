@@ -1,24 +1,24 @@
 export const FEATURES = [
     {
-        icon: "neurology",
+        icon: "Brain",
         title: "AI Personalization",
         description:
             "Generate hyper-relevant openers based on LinkedIn profiles and company news automatically.",
     },
     {
-        icon: "verified_user",
+        icon: "ShieldCheck",
         title: "Email Quality Score",
         description:
             "Real-time deliverability checks and spam trigger detection to ensure primary inbox landing.",
     },
     {
-        icon: "upload_file",
+        icon: "FileUp",
         title: "Bulk CSV Processing",
         description:
             "Upload thousands of leads and personalize them all in a matter of seconds via our cloud engine.",
     },
     {
-        icon: "hub",
+        icon: "Share2",
         title: "CRM Integration",
         description:
             "Seamlessly sync your data with Salesforce, HubSpot, and Pipedrive without manual entry.",

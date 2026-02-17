@@ -1,4 +1,5 @@
 import { PRICING_PLANS } from "@/constants/landing";
+import { CheckCircle2, XCircle } from "lucide-react";
 
 export default function Pricing() {
     return (
@@ -36,27 +37,24 @@ export default function Pricing() {
                                 </div>
                             </div>
                             <ul className="space-y-4 mb-10 flex-grow">
-                                {plan.features.map((feature, i) => (
-                                    <li
-                                        key={i}
-                                        className={`flex items-center gap-3 text-sm ${typeof feature === "object" && !feature.available
-                                            ? "text-gray-400"
-                                            : ""
-                                            }`}
-                                    >
-                                        <span
-                                            className={`material-symbols-outlined text-lg ${typeof feature === "object" && !feature.available
-                                                ? "text-gray-300"
-                                                : "text-primary"
-                                                }`}
+                                {plan.features.map((feature, i) => {
+                                    const isAvailable = typeof feature !== "object" || feature.available;
+                                    const featureText = typeof feature === "object" ? feature.text : feature;
+
+                                    return (
+                                        <li
+                                            key={i}
+                                            className={`flex items-center gap-3 text-sm ${!isAvailable ? "text-gray-400" : ""}`}
                                         >
-                                            {typeof feature === "object" && !feature.available
-                                                ? "cancel"
-                                                : "check_circle"}
-                                        </span>
-                                        {typeof feature === "object" ? feature.text : feature}
-                                    </li>
-                                ))}
+                                            {isAvailable ? (
+                                                <CheckCircle2 size={18} className="text-primary" />
+                                            ) : (
+                                                <XCircle size={18} className="text-gray-300" />
+                                            )}
+                                            {featureText}
+                                        </li>
+                                    );
+                                })}
                             </ul>
                             <button
                                 className={`w-full py-4 font-bold rounded-xl transition-all ${plan.featured
