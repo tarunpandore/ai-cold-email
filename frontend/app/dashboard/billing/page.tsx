@@ -1,7 +1,30 @@
-export default function Home() {
+"use client";
+
+import TopBar from "@/components/layouts/TopBar";
+import BillingHeader from "@/components/dashboard/billing/BillingHeader";
+import PlanHero from "@/components/dashboard/billing/PlanHero";
+import PlanOptions from "@/components/dashboard/billing/PlanOptions";
+import BillingDetails from "@/components/dashboard/billing/BillingDetails";
+import InvoiceHistory from "@/components/dashboard/billing/InvoiceHistory";
+
+export default function BillingPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans ">
-      <h1>AI Cold Email</h1>
-    </div>
+    <>
+      <TopBar />
+
+      <main className="p-4 md:p-8 space-y-12">
+        <div className="max-w-6xl mx-auto space-y-12">
+          <BillingHeader />
+
+          <PlanHero />
+
+          <PlanOptions />
+
+          <BillingDetails />
+
+          <InvoiceHistory />
+        </div>
+      </main>
+    </>
   );
 }

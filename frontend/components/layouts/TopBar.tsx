@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Bell, Menu, ChevronRight, Upload } from "lucide-react";
+import { BellDot, Menu, ChevronRight, Upload } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -87,7 +87,7 @@ export default function TopBar({ title }: TopBarProps) {
                         onClick={() => setIsNotificationOpen(!isNotificationOpen)}
                         className="size-9 md:size-10 rounded-full hover:bg-primary/5 flex items-center justify-center text-slate-600 transition-colors relative"
                     >
-                        <Bell size={20} />
+                        <BellDot size={20} />
                         {unreadCount > 0 && (
                             <span className="absolute top-1.5 right-1.5 size-4 bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center rounded-full border-2 border-white">
                                 {unreadCount}
