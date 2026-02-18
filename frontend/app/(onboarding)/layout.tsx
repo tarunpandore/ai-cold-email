@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Manrope } from "next/font/google";
 import "../globals.css";
+import { OnboardingTopbar } from "@/components/onboarding/OnboardingTopbar";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const manrope = Manrope({
   subsets: ["latin"],
+  variable: "--font-manrope",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+export const metadata: Metadata = {
+  title: "Onboarding - Heritage Outreach",
+  description: "Set up your profile and business context",
+};
 
 export default function OnboardingLayout({
   children,
@@ -18,7 +19,8 @@ export default function OnboardingLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="min-h-screen">
+    <div className={`min-h-screen bg-background-light font-sans ${manrope.variable}`}>
+      <OnboardingTopbar />
       {children}
     </div>
   );

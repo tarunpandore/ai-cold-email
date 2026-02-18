@@ -6,12 +6,13 @@ import Stats from "@/components/dashboard/Stats";
 import DashboardCharts from "@/components/dashboard/DashboardCharts";
 import RecentActivity from "@/components/dashboard/RecentActivity";
 import { useAppStore } from "@/store/useAppStore";
+import DashboardFooter from "@/components/layouts/DashboardFooter";
 
 export default function DashboardPage() {
     const user = useAppStore((state) => state.user);
 
     return (
-        <div className="flex-1 flex flex-col min-w-0 h-full">
+        <>
             <TopBar title="Overview" />
             <div className="p-4 md:p-8 space-y-6 md:space-y-8">
                 {/* Quick Actions / Welcome */}
@@ -38,6 +39,8 @@ export default function DashboardPage() {
 
                 <RecentActivity />
             </div>
-        </div>
+
+            <DashboardFooter />
+        </>
     );
 }

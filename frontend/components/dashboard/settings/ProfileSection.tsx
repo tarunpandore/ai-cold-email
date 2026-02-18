@@ -1,18 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Camera, Sparkles, User as UserIcon } from "lucide-react";
 import SettingsCard from "./SettingsCard";
 import { SettingsInput, SettingsSelect } from "./SettingsForm";
 import { useAppStore } from "@/store/useAppStore";
+import { useSettingsStore } from "@/store/useSettingsStore";
 
 export default function ProfileSection() {
     const { user } = useAppStore();
-    const [name, setName] = useState(user?.name || "Alexander Sterling");
-    const [jobTitle, setJobTitle] = useState("Director of Growth");
-    const [timezone, setTimezone] = useState("UTC-5");
-    const [tone, setTone] = useState("professional");
-    const [ctaType, setCtaType] = useState("calendar");
+    const {
+        name, jobTitle, timezone, tone, ctaType,
+        updateField, setInitialState
+    } = useSettingsStore();
+
+    useEffect(() => {
+        // Initialize store with current user data if not already set
+        setInitialState({
+            name: user?.name || "Alexander Sterling",
+            jobTitle: "Director of Growth",
+            timezone: "UTC-5",
+            tone: "professional",
+            ctaType: "calendar"
+        });
+    }, [user, setInitialState]);
+
+    const setName = (val: string) => updateField("name", val);
+    const setJobTitle = (val: string) => updateField("jobTitle", val);
+    const setTimezone = (val: string) => updateField("timezone", val);
+    const setTone = (val: string) => updateField("tone", val);
+    const setCtaType = (val: string) => updateField("ctaType", val);
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -102,8 +119,8 @@ export default function ProfileSection() {
                                         key={t}
                                         onClick={() => setTone(t)}
                                         className={`p-3 border-2 rounded-lg text-sm font-bold transition-all capitalize ${tone === t
-                                                ? "border-primary bg-primary/5 text-primary"
-                                                : "border-slate-100 text-slate-500 hover:border-primary/30"
+                                            ? "border-primary bg-primary/5 text-primary"
+                                            : "border-slate-100 text-slate-500 hover:border-primary/30"
                                             }`}
                                     >
                                         {t}

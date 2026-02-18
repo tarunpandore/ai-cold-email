@@ -1,12 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect } from "react";
 import { Shield, Lock, History, Smartphone, Monitor, Tablet, LogOut, CheckCircle2 } from "lucide-react";
 import SettingsCard from "./SettingsCard";
 import { SettingsToggle } from "./SettingsForm";
+import { useSettingsStore } from "@/store/useSettingsStore";
 
 export default function SecuritySection() {
-    const [twoFA, setTwoFA] = useState(true);
+    const { twoFA, updateField, setInitialState } = useSettingsStore();
+
+    useEffect(() => {
+        setInitialState({ twoFA: true });
+    }, [setInitialState]);
+
+    const setTwoFA = (val: boolean) => updateField("twoFA", val);
 
     const sessions = [
         {

@@ -1,22 +1,51 @@
+"use client";
+
 import { useState } from "react";
-import { Bell, Menu } from "lucide-react";
+import { Bell, Menu, ChevronRight, Upload } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 import NotificationPanel from "../ui/NotificationPanel";
 import { MOCK_NOTIFICATIONS } from "@/lib/mock";
 
 interface TopBarProps {
-    title: string;
+    title?: string;
 }
 
 export default function TopBar({ title }: TopBarProps) {
-    const { user, toggleSidebar } = useAppStore();
+    const { toggleSidebar } = useAppStore();
+    const pathname = usePathname();
     const [isNotificationOpen, setIsNotificationOpen] = useState(false);
 
-    const creditPercentage = user ? Math.round((user.creditsRemaining / user.totalCredits) * 100) : 0;
     const unreadCount = MOCK_NOTIFICATIONS.filter(n => !n.isRead).length;
 
+    // Breadcrumb logic
+    const getBreadcrumbs = () => {
+        const paths = pathname.split('/').filter(Boolean);
+        return paths.map((path, index) => {
+            let label = path.charAt(0).toUpperCase() + path.slice(1).replace(/-/g, ' ');
+
+            // Custom label mappings
+            if (path === 'dashboard') label = 'Dashboard';
+            if (path === 'generate') label = 'Generate Emails';
+            if (path === 'settings') label = 'Settings';
+            if (path === 'leads') label = 'Leads';
+            if (path === 'analytics') label = 'Analytics';
+            if (path === 'results') label = 'Results';
+            if (path === 'billing') label = 'Billing';
+
+            return {
+                label: label,
+                isLast: index === paths.length - 1
+            };
+        });
+    };
+
+    const breadcrumbs = getBreadcrumbs();
+    const isLeadsPage = pathname === "/dashboard/leads";
+
     return (
-        <header className="h-16 bg-white/80 backdrop-blur-md border-b border-primary/5 px-4 md:px-8 py-2 flex items-center justify-between sticky top-0 z-30">
+        <header className="h-16 bg-white/80 backdrop-blur-md border-b border-primary/5 px-4 md:px-8 py-3 flex items-center justify-between sticky top-0 z-30">
             <div className="flex items-center gap-4">
                 <button
                     onClick={toggleSidebar}
@@ -24,17 +53,33 @@ export default function TopBar({ title }: TopBarProps) {
                 >
                     <Menu size={24} />
                 </button>
-                <h2 className="text-lg md:text-xl font-bold text-slate-800 truncate">{title}</h2>
+
+                <div className="flex items-center gap-1.5 overflow-hidden">
+                    {breadcrumbs.map((crumb, idx) => (
+                        <div key={idx} className="flex items-center gap-1.5">
+                            <span className={`text-sm md:text-base whitespace-nowrap ${crumb.isLast ? "font-bold text-slate-800" : "font-medium text-primary/60"}`}>
+                                {crumb.label}
+                            </span>
+                            {!crumb.isLast && (
+                                <ChevronRight size={14} className="text-primary/40 shrink-0" />
+                            )}
+                        </div>
+                    ))}
+                    {breadcrumbs.length === 0 && title && (
+                        <h2 className="text-lg md:text-xl font-bold text-slate-800 truncate">{title}</h2>
+                    )}
+                </div>
             </div>
 
             <div className="flex items-center gap-3 md:gap-6">
-                {user && (
-                    <div className="hidden sm:flex items-center gap-3 bg-primary/5 px-4 py-2 rounded-lg border border-primary/10">
-                        <span className="text-xs font-bold text-primary uppercase whitespace-nowrap">Credits: {user.creditsRemaining.toLocaleString()} Left</span>
-                        <div className="w-24 hidden lg:block bg-primary/20 rounded-full h-1.5">
-                            <div className="bg-primary h-1.5 rounded-full" style={{ width: `${creditPercentage}%` }}></div>
-                        </div>
-                    </div>
+                {isLeadsPage && (
+                    <Link
+                        href="/dashboard/leads/upload"
+                        className="hidden sm:flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg shadow-primary/10 hover:opacity-90 transition-all"
+                    >
+                        <Upload size={16} />
+                        Upload Leads
+                    </Link>
                 )}
 
                 <div className="flex items-center gap-2 md:gap-3 relative">

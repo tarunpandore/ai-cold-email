@@ -2,6 +2,7 @@
 
 import { Download, ShieldCheck, AlertCircle, Trash2, FileJson, FileType, ExternalLink } from "lucide-react";
 import SettingsCard from "./SettingsCard";
+import DashboardFooter from "@/components/layouts/DashboardFooter";
 
 export default function DataManagementSection() {
     return (
@@ -74,12 +75,7 @@ export default function DataManagementSection() {
                 </div>
             </section>
 
-            <footer className="pt-10 pb-12 text-center">
-                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-loose">
-                    © 2024 ColdReply SaaS Platform. All rights reserved. <br />
-                    Need help? <button className="underline hover:text-primary">Contact Support</button>
-                </p>
-            </footer>
+            <DashboardFooter />
         </div>
     );
 }

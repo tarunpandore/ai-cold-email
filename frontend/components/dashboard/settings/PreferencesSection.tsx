@@ -1,19 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect } from "react";
 import { Mail, Globe, Bell as BellIcon, Info } from "lucide-react";
 import SettingsCard from "./SettingsCard";
 import { SettingsToggle, SettingsSelect } from "./SettingsForm";
+import { useSettingsStore } from "@/store/useSettingsStore";
 
 export default function PreferencesSection() {
-    const [tone, setTone] = useState("Professional");
-    const [ctaType, setCtaType] = useState("Book a Meeting");
-    const [language, setLanguage] = useState("en");
-    const [alerts, setAlerts] = useState({
-        processing: true,
-        login: true,
-        usage: true
-    });
+    const {
+        emailTone, primaryCtaType, language, alerts,
+        updateField, updateAlerts, setInitialState
+    } = useSettingsStore();
+
+    useEffect(() => {
+        setInitialState({
+            emailTone: "Professional",
+            primaryCtaType: "Book a Meeting",
+            language: "en",
+            alerts: {
+                processing: true,
+                login: true,
+                usage: true
+            }
+        });
+    }, [setInitialState]);
+
+    const setTone = (val: string) => updateField("emailTone", val);
+    const setCtaType = (val: string) => updateField("primaryCtaType", val);
+    const setLanguage = (val: string) => updateField("language", val);
+    const setAlerts = (field: keyof typeof alerts, val: boolean) => updateAlerts(field, val);
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -34,9 +49,9 @@ export default function PreferencesSection() {
                                 <button
                                     key={t}
                                     onClick={() => setTone(t)}
-                                    className={`flex flex-col items-center justify-center p-4 border rounded-xl transition-all ${tone === t
-                                            ? "border-primary bg-primary/5 text-primary"
-                                            : "border-slate-100 text-slate-500 hover:bg-slate-50"
+                                    className={`flex flex-col items-center justify-center p-4 border rounded-xl transition-all ${emailTone === t
+                                        ? "border-primary bg-primary/5 text-primary"
+                                        : "border-slate-100 text-slate-500 hover:bg-slate-50"
                                         }`}
                                 >
                                     <span className="text-sm font-bold">{t}</span>
@@ -49,7 +64,7 @@ export default function PreferencesSection() {
                         <SettingsSelect
                             label="Primary CTA Type"
                             id="cta_type"
-                            value={ctaType}
+                            value={primaryCtaType}
                             onChange={setCtaType}
                             options={[
                                 { value: "Book a Meeting", label: "Book a Meeting" },
@@ -101,7 +116,7 @@ export default function PreferencesSection() {
                             title="Lead Processing Alerts"
                             description="Get an email when a new batch of leads has been successfully analyzed."
                             checked={alerts.processing}
-                            onChange={(val) => setAlerts({ ...alerts, processing: val })}
+                            onChange={(val) => setAlerts("processing", val)}
                         />
                     </div>
                     <div className="py-6">
@@ -109,7 +124,7 @@ export default function PreferencesSection() {
                             title="Login Alerts"
                             description="Receive a notification whenever a new login is detected on your account."
                             checked={alerts.login}
-                            onChange={(val) => setAlerts({ ...alerts, login: val })}
+                            onChange={(val) => setAlerts("login", val)}
                         />
                     </div>
                     <div className="py-6">
@@ -117,7 +132,7 @@ export default function PreferencesSection() {
                             title="Usage Limit Warnings"
                             description="Notify me when I reach 80% and 100% of my monthly lead generation quota."
                             checked={alerts.usage}
-                            onChange={(val) => setAlerts({ ...alerts, usage: val })}
+                            onChange={(val) => setAlerts("usage", val)}
                         />
                     </div>
                 </div>

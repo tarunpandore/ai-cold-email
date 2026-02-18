@@ -7,10 +7,11 @@ import ProfileSection from "@/components/dashboard/settings/ProfileSection";
 import SecuritySection from "@/components/dashboard/settings/SecuritySection";
 import PreferencesSection from "@/components/dashboard/settings/PreferencesSection";
 import DataManagementSection from "@/components/dashboard/settings/DataManagementSection";
+import { useSettingsStore } from "@/store/useSettingsStore";
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("profile");
-  const [isDirty, setIsDirty] = useState(false);
+  const { isDirty, isSaving, saveChanges, discardChanges } = useSettingsStore();
 
   const tabs = [
     { id: "profile", label: "Profile" },
@@ -35,7 +36,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-[calc(100vh-4rem)] relative">
+    <div className="flex flex-col min-h-[calc(100vh-4rem)] relative overflow-x-hidden">
       <SettingsHeader
         title="Account Settings"
         description="Manage your personal identity, security parameters, and AI writing preferences for the ColdReply engine."
@@ -49,9 +50,10 @@ export default function SettingsPage() {
       </main>
 
       <SettingsFooter
-        onSave={() => setIsDirty(false)}
-        onDiscard={() => setIsDirty(false)}
-        isDirty={isDirty || activeTab !== "data"} // Force showing for demo purposes as requested in design "Preferences"
+        onSave={saveChanges}
+        onDiscard={discardChanges}
+        isDirty={isDirty}
+        isSaving={isSaving}
       />
     </div>
   );
