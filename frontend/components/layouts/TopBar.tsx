@@ -1,7 +1,8 @@
-"use client";
-
+import { useState } from "react";
 import { Bell, Menu } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
+import NotificationPanel from "../ui/NotificationPanel";
+import { MOCK_NOTIFICATIONS } from "@/lib/mock";
 
 interface TopBarProps {
     title: string;
@@ -9,8 +10,10 @@ interface TopBarProps {
 
 export default function TopBar({ title }: TopBarProps) {
     const { user, toggleSidebar } = useAppStore();
+    const [isNotificationOpen, setIsNotificationOpen] = useState(false);
 
     const creditPercentage = user ? Math.round((user.creditsRemaining / user.totalCredits) * 100) : 0;
+    const unreadCount = MOCK_NOTIFICATIONS.filter(n => !n.isRead).length;
 
     return (
         <header className="h-16 bg-white/80 backdrop-blur-md border-b border-primary/5 px-4 md:px-8 py-2 flex items-center justify-between sticky top-0 z-30">
@@ -34,10 +37,23 @@ export default function TopBar({ title }: TopBarProps) {
                     </div>
                 )}
 
-                <div className="flex items-center gap-2 md:gap-3">
-                    <button className="size-9 md:size-10 rounded-full hover:bg-primary/5 flex items-center justify-center text-slate-600 transition-colors">
+                <div className="flex items-center gap-2 md:gap-3 relative">
+                    <button
+                        onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+                        className="size-9 md:size-10 rounded-full hover:bg-primary/5 flex items-center justify-center text-slate-600 transition-colors relative"
+                    >
                         <Bell size={20} />
+                        {unreadCount > 0 && (
+                            <span className="absolute top-1.5 right-1.5 size-4 bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center rounded-full border-2 border-white">
+                                {unreadCount}
+                            </span>
+                        )}
                     </button>
+
+                    <NotificationPanel
+                        isOpen={isNotificationOpen}
+                        onClose={() => setIsNotificationOpen(false)}
+                    />
                 </div>
             </div>
         </header>

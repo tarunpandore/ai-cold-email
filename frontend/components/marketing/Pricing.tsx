@@ -1,5 +1,6 @@
 import { PRICING_PLANS } from "@/constants/landing";
 import { CheckCircle2, XCircle } from "lucide-react";
+import Link from "next/link";
 
 export default function Pricing() {
     return (
@@ -56,14 +57,15 @@ export default function Pricing() {
                                     );
                                 })}
                             </ul>
-                            <button
-                                className={`w-full py-4 font-bold rounded-xl transition-all ${plan.featured
+                            <Link
+                                href="/signup"
+                                className={`w-full py-4 font-bold rounded-xl transition-all text-center ${plan.featured
                                     ? "bg-primary text-white shadow-xl shadow-primary/20 hover:scale-[1.02]"
                                     : "border-2 border-primary text-primary hover:bg-primary hover:text-white"
                                     }`}
                             >
                                 {plan.buttonText}
-                            </button>
+                            </Link>
                         </div>
                     ))}
                 </div>

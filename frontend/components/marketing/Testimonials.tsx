@@ -1,4 +1,5 @@
 import { TESTIMONIALS } from "@/constants/landing";
+import Link from "next/link";
 
 export default function Testimonials() {
     return (
@@ -51,9 +52,12 @@ export default function Testimonials() {
                         Join 2,000+ sales teams who have abandoned generic templates for AI
                         personalization.
                     </p>
-                    <button className="h-16 px-12 bg-primary text-white rounded-2xl font-bold text-xl shadow-2xl shadow-primary/30 hover:scale-105 transition-all">
+                    <Link
+                        href="/signup"
+                        className="h-16 px-12 bg-primary text-white rounded-2xl font-bold text-xl shadow-2xl shadow-primary/30 hover:scale-105 transition-all inline-flex items-center justify-center"
+                    >
                         Get Started for Free
-                    </button>
+                    </Link>
                     <p className="mt-6 text-sm text-gray-400">
                         No credit card required. 14-day free trial.
                     </p>

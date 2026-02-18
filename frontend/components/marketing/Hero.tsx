@@ -1,6 +1,48 @@
+'use client'
+
 import { Bolt, PlayCircle, Search, User, Sparkles, CheckCircle2 } from "lucide-react";
+import Link from "next/link";
+import { useState, useEffect } from "react";
 
 export default function Hero() {
+    const [text, setText] = useState("");
+    const [wordIndex, setWordIndex] = useState(0);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const words = ["Replies", "Meetings", "Growth", "Results"];
+
+    // Refined timing for a more "human" feel
+    const [delta, setDelta] = useState(200);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            const currentWord = words[wordIndex];
+
+            if (!isDeleting) {
+                // Typing text
+                setText(currentWord.substring(0, text.length + 1));
+                // Variable speed while typing
+                setDelta(100 + Math.random() * 80);
+
+                if (text === currentWord) {
+                    setIsDeleting(true);
+                    setDelta(2000); // Pause at end
+                }
+            } else {
+                // Deleting text
+                setText(currentWord.substring(0, text.length - 1));
+                setDelta(50); // Faster deletion
+
+                if (text === "") {
+                    setIsDeleting(false);
+                    setWordIndex((prev) => (prev + 1) % words.length);
+                    setDelta(500); // Pause before next word
+                }
+            }
+        }, delta);
+
+        return () => clearTimeout(timer);
+    }, [text, isDeleting, wordIndex, delta]);
+
     return (
         <section className="relative overflow-hidden pt-20 pb-16 lg:pt-32 lg:pb-24">
             <div className="max-w-7xl mx-auto px-6">
@@ -10,10 +52,14 @@ export default function Hero() {
                             <Bolt size={14} />
                             AI-Powered Outreach
                         </div>
-                        <h1 className="text-5xl lg:text-7xl font-black leading-tight tracking-tight text-gray-900">
+                        <h1 className="text-5xl lg:text-7xl font-black leading-tight tracking-tight text-gray-900 min-h-[160px] lg:min-h-[180px]">
                             Cold Emails That Actually Get{" "}
-                            <span className="text-primary underline decoration-primary/20">
-                                Replies
+                            <span className="text-primary relative inline-block">
+                                <span className="relative z-10">{text}</span>
+                                {/* Elegant blinking cursor */}
+                                <span className="absolute -right-0.5 top-1 h-[80%] w-[2px] bg-primary animate-[blink_1s_step-end_infinite]"></span>
+                                {/* Custom Underline Design - Adjusted for better visual alignment */}
+                                <span className="absolute left-0 bottom-2 w-full h-[8px] bg-primary/15 -z-10 rounded-sm"></span>
                             </span>
                         </h1>
                         <p className="text-lg lg:text-xl text-gray-600 leading-relaxed max-w-xl">
@@ -22,9 +68,12 @@ export default function Hero() {
                             spam, start building real relationships.
                         </p>
                         <div className="flex flex-wrap gap-4">
-                            <button className="h-14 px-8 bg-primary text-white rounded-xl font-bold text-lg shadow-xl shadow-primary/20 hover:-translate-y-1 transition-all">
+                            <Link
+                                href="/signup"
+                                className="h-14 px-8 bg-primary text-white rounded-xl font-bold text-lg shadow-xl shadow-primary/20 hover:-translate-y-1 transition-all flex items-center"
+                            >
                                 Start Free Trial
-                            </button>
+                            </Link>
                             <button className="h-14 px-8 bg-white border border-gray-200 rounded-xl font-bold text-lg flex items-center gap-2 hover:bg-gray-50 transition-all">
                                 <PlayCircle size={24} />
                                 See Demo

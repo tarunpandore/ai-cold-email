@@ -37,12 +37,18 @@ export default function Navbar() {
                 </nav>
 
                 <div className="flex items-center gap-3">
-                    <button className="px-4 py-2 text-sm font-bold text-primary hover:bg-primary/5 rounded-lg transition-all">
+                    <Link
+                        href="/login"
+                        className="px-4 py-2 text-sm font-bold text-primary hover:bg-primary/5 rounded-lg transition-all"
+                    >
                         Login
-                    </button>
-                    <button className="px-5 py-2 text-sm font-bold bg-primary text-white rounded-lg shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
+                    </Link>
+                    <Link
+                        href="/signup"
+                        className="px-5 py-2 text-sm font-bold bg-primary text-white rounded-lg shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all font-sans"
+                    >
                         Get Started
-                    </button>
+                    </Link>
                 </div>
             </div>
         </header>
