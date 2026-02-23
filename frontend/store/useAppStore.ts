@@ -31,7 +31,7 @@ export const useAppStore = create<AppState>()(
             chartData: MOCK_CHART_DATA,
 
             // UI State
-            isSidebarOpen: true,
+            isSidebarOpen: false,
 
             // Actions
             setUser: (user) => set({ user }),

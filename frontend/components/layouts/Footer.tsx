@@ -25,10 +25,10 @@ export default function Footer() {
                     {SITE_CONFIG.description}
                 </p>
                 <div className="flex items-center gap-6 text-xs font-bold uppercase tracking-widest text-gray-400 mb-6 font-display">
-                    <Link href="#" className="hover:text-primary transition-colors">
+                    <Link href="/privacy" className="hover:text-primary transition-colors">
                         Privacy
                     </Link>
-                    <Link href="#" className="hover:text-primary transition-colors">
+                    <Link href="/terms" className="hover:text-primary transition-colors">
                         Terms
                     </Link>
                     <a

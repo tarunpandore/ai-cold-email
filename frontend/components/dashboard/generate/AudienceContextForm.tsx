@@ -3,8 +3,17 @@
 import { Info, Briefcase, Coffee, Bolt } from "lucide-react";
 import { useState } from "react";
 
-export default function AudienceContextForm() {
-    const [tone, setTone] = useState("professional");
+export default function AudienceContextForm({
+    industry,
+    setIndustry,
+    tone,
+    setTone,
+}: {
+    industry: string;
+    setIndustry: (v: string) => void;
+    tone: string;
+    setTone: (v: string) => void;
+}) {
 
     return (
         <section className="bg-white rounded-xl border border-primary/5 p-6 shadow-sm">
@@ -29,6 +38,8 @@ export default function AudienceContextForm() {
                             className="w-full bg-slate-50 border-slate-200 rounded-lg focus:ring-primary focus:border-primary text-sm py-2.5"
                             placeholder="e.g. Fintech Startups, SaaS Founders"
                             type="text"
+                            value={industry}
+                            onChange={(e) => setIndustry(e.target.value)}
                         />
                         <div className="absolute right-3 top-1/2 -translate-y-1/2 text-primary/40">
                             <Info size={18} />

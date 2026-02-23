@@ -1,9 +1,10 @@
 "use client";
 
-import { useAppStore } from "@/store/useAppStore";
+
+import { useUserStore } from "@/store/useUserStore";
 
 export default function AccountUsageCard() {
-    const { user } = useAppStore();
+    const { user } = useUserStore();
 
     const used = 4280; // Mock from design
     const total = 10000;

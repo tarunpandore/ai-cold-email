@@ -19,6 +19,7 @@ backend/build/
 .env*
 frontend/.env*
 backend/.env*
+backend/RENDER_DEPLOYMENT.md
 
 # IDEs and OS
 .vscode/

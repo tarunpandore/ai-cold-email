@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Sparkles,
   Mail,
@@ -9,13 +10,57 @@ import {
   Eye,
   EyeOff,
   ArrowRight,
-  Unlock
+  Unlock,
+  Loader2
 } from "lucide-react";
+import api from "@/lib/api";
+import { useUserStore } from "@/store/useUserStore";
 
 export default function LoginPage() {
+  const router = useRouter();
+  // @ts-ignore
+  const { setAccessToken, setUser } = useUserStore();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  // Backend Integration: Handle user login
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    try {
+      const response = await api.post("/auth/login", {
+        email,
+        password,
+      });
+
+      const { accessToken } = response.data;
+
+      // Store token
+      setAccessToken(accessToken);
+
+      // Fetch user info to check onboarding status
+      const userRes = await api.get("/auth/me");
+      const userData = userRes.data;
+      setUser(userData);
+
+      // Navigation Logic: Redirect based on onboarding completeness
+      if (userData.onboardingComplete) {
+        router.push("/dashboard");
+      } else {
+        router.push("/profile");
+      }
+    } catch (err: any) {
+      console.error(err);
+      setError(err.response?.data?.error || err.response?.data?.message || "Invalid email or password. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="bg-background-light min-h-screen flex flex-col font-sans">
@@ -56,7 +101,12 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-5" onSubmit={handleSubmit}>
+            {error && (
+              <div className="p-3 rounded-lg bg-rose-50 border border-rose-100 text-rose-600 text-sm font-medium animate-in fade-in zoom-in-95">
+                {error}
+              </div>
+            )}
             {/* Email Field */}
             <div className="space-y-2">
               <label className="block text-zinc-700 text-sm font-bold tracking-tight px-1">Email Address</label>
@@ -105,9 +155,22 @@ export default function LoginPage() {
             </div>
 
             {/* Login Button */}
-            <button className="w-full flex items-center justify-center gap-2 rounded-lg bg-primary hover:bg-primary/90 text-white h-14 text-base font-extrabold shadow-lg shadow-primary/10 transition-all hover:-translate-y-0.5 active:translate-y-0" type="submit">
-              <span>Sign In to Dashboard</span>
-              <ArrowRight size={18} />
+            <button
+              disabled={loading}
+              className="w-full flex items-center justify-center gap-2 rounded-lg bg-primary hover:bg-primary/90 text-white h-14 text-base font-extrabold shadow-lg shadow-primary/10 transition-all hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed"
+              type="submit"
+            >
+              {loading ? (
+                <>
+                  <Loader2 size={20} className="animate-spin" />
+                  Logging in...
+                </>
+              ) : (
+                <>
+                  <span>Sign In to Dashboard</span>
+                  <ArrowRight size={18} />
+                </>
+              )}
             </button>
           </form>
 

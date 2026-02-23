@@ -12,7 +12,9 @@ interface UserProfile {
 
 interface UserState {
     user: UserProfile | null;
+    accessToken: string | null;
     setUser: (user: UserProfile) => void;
+    setAccessToken: (token: string | null) => void;
     updateCredits: (remaining: number) => void;
     logout: () => void;
 }
@@ -20,19 +22,25 @@ interface UserState {
 export const useUserStore = create<UserState>()(
     persist(
         (set) => ({
-            user: {
-                name: "Alex",
-                email: "alex@example.com",
-                plan: "Pro",
-                creditsRemaining: 650,
-                totalCredits: 1000,
-            },
+            user: null,
+            accessToken: null,
             setUser: (user) => set({ user }),
+            setAccessToken: (accessToken) => {
+                set({ accessToken });
+                if (accessToken) {
+                    localStorage.setItem("accessToken", accessToken);
+                } else {
+                    localStorage.removeItem("accessToken");
+                }
+            },
             updateCredits: (remaining) =>
                 set((state) => ({
                     user: state.user ? { ...state.user, creditsRemaining: remaining } : null,
                 })),
-            logout: () => set({ user: null }),
+            logout: () => {
+                set({ user: null, accessToken: null });
+                localStorage.removeItem("accessToken");
+            },
         }),
         {
             name: "user-storage",

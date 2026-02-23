@@ -1,12 +1,13 @@
 import { create } from "zustand";
+import api from "@/lib/api";
 
 interface SettingsState {
     // Profile
-    name: string;
+    fullName: string;
     jobTitle: string;
     timezone: string;
     tone: string;
-    ctaType: string;
+    ctaStyle: string;
 
     // Security
     twoFA: boolean;
@@ -33,14 +34,15 @@ interface SettingsActions {
     setInitialState: (state: Partial<SettingsState>) => void;
     saveChanges: () => Promise<void>;
     discardChanges: () => void;
+    fetchProfile: () => Promise<void>;
 }
 
 const defaultState = {
-    name: "Alexander Sterling",
+    fullName: "Alexander Sterling",
     jobTitle: "Director of Growth",
     timezone: "UTC-5",
     tone: "professional",
-    ctaType: "calendar",
+    ctaStyle: "calendar",
     twoFA: true,
     emailTone: "Professional",
     primaryCtaType: "Book a Meeting",
@@ -82,17 +84,57 @@ export const useSettingsStore = create<SettingsState & SettingsActions>((set, ge
 
     saveChanges: async () => {
         set({ isSaving: true });
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        const currentState = get();
-        const { initialState, isDirty, isSaving, ...actualData } = currentState;
-        set({ initialState: currentState, isDirty: false, isSaving: false });
+        try {
+            const currentState = get();
+            const { initialState, isDirty, isSaving, ...actualData } = currentState;
+
+            await api.patch("/settings", actualData);
+
+            set({ initialState: currentState, isDirty: false, isSaving: false });
+        } catch (error) {
+            console.error("Failed to save settings:", error);
+            set({ isSaving: false });
+        }
     },
 
     discardChanges: () => {
         const initialState = get().initialState;
         if (initialState) {
             set({ ...initialState, isDirty: false });
+        }
+    },
+
+    fetchProfile: async () => {
+        try {
+            const response = await api.get("/settings");
+            const data = response.data;
+
+            const newState = {
+                fullName: data.fullName || defaultState.fullName,
+                jobTitle: data.jobTitle || defaultState.jobTitle,
+                tone: data.tone || defaultState.tone,
+                ctaStyle: data.ctaStyle || defaultState.ctaStyle,
+                timezone: data.timezone || defaultState.timezone,
+                twoFA: data.twoFA ?? defaultState.twoFA,
+                emailTone: data.emailTone || defaultState.emailTone,
+                primaryCtaType: data.primaryCtaType || defaultState.primaryCtaType,
+                language: data.language || defaultState.language,
+                alerts: data.alerts || defaultState.alerts,
+            };
+
+            set({
+                ...newState,
+                initialState: newState,
+                isDirty: false,
+                isSaving: false
+            });
+        } catch (error) {
+            console.error("Failed to fetch settings:", error);
+            // Fallback to default state on failure
+            if (!get().initialState) {
+                const currentState = get();
+                set({ initialState: currentState });
+            }
         }
     }
 }));

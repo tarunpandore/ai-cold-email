@@ -26,7 +26,7 @@ const STEPS = [
     },
 ];
 
-export default function ProcessingFlowStepper() {
+export default function ProcessingFlowStepper({ activeStep = 0 }: { activeStep?: number }) {
     return (
         <section className="bg-white rounded-xl border border-primary/5 p-6">
             <h4 className="font-bold text-xs text-slate-800 mb-6 uppercase tracking-wider">Processing Flow</h4>
@@ -34,11 +34,12 @@ export default function ProcessingFlowStepper() {
                 {/* Connector Line */}
                 <div className="absolute left-4 top-2 bottom-2 w-0.5 bg-slate-100 z-0" />
 
-                {STEPS.map((step) => {
+                {STEPS.map((step, index) => {
                     const Icon = step.icon;
+                    const isActive = index <= activeStep;
                     return (
-                        <div key={step.id} className={`relative flex items-start gap-4 z-10 transition-opacity duration-300 ${step.active ? "opacity-100" : "opacity-40"}`}>
-                            <div className={`size-8 rounded-full flex items-center justify-center shadow-sm ${step.active ? "bg-primary text-white" : "bg-slate-100 text-slate-400"
+                        <div key={step.id} className={`relative flex items-start gap-4 z-10 transition-opacity duration-300 ${isActive ? "opacity-100" : "opacity-40"}`}>
+                            <div className={`size-8 rounded-full flex items-center justify-center shadow-sm ${isActive ? "bg-primary text-white" : "bg-slate-100 text-slate-400"
                                 }`}>
                                 <Icon size={16} />
                             </div>

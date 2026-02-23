@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SettingsHeader from "@/components/dashboard/settings/SettingsHeader";
 import SettingsFooter from "@/components/dashboard/settings/SettingsFooter";
 import ProfileSection from "@/components/dashboard/settings/ProfileSection";
@@ -11,7 +11,12 @@ import { useSettingsStore } from "@/store/useSettingsStore";
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("profile");
-  const { isDirty, isSaving, saveChanges, discardChanges } = useSettingsStore();
+  // @ts-ignore
+  const { isDirty, isSaving, saveChanges, discardChanges, fetchProfile } = useSettingsStore();
+
+  useEffect(() => {
+    fetchProfile();
+  }, [fetchProfile]);
 
   const tabs = [
     { id: "profile", label: "Profile" },

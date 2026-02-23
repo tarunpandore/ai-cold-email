@@ -8,14 +8,14 @@ import { useSettingsStore } from "@/store/useSettingsStore";
 
 export default function PreferencesSection() {
     const {
-        emailTone, primaryCtaType, language, alerts,
+        tone, ctaStyle, language, alerts,
         updateField, updateAlerts, setInitialState
     } = useSettingsStore();
 
     useEffect(() => {
         setInitialState({
-            emailTone: "Professional",
-            primaryCtaType: "Book a Meeting",
+            tone: "Professional",
+            ctaStyle: "Book a Meeting",
             language: "en",
             alerts: {
                 processing: true,
@@ -25,8 +25,8 @@ export default function PreferencesSection() {
         });
     }, [setInitialState]);
 
-    const setTone = (val: string) => updateField("emailTone", val);
-    const setCtaType = (val: string) => updateField("primaryCtaType", val);
+    const setTone = (val: string) => updateField("tone", val);
+    const setCtaType = (val: string) => updateField("ctaStyle", val);
     const setLanguage = (val: string) => updateField("language", val);
     const setAlerts = (field: keyof typeof alerts, val: boolean) => updateAlerts(field, val);
 
@@ -49,7 +49,7 @@ export default function PreferencesSection() {
                                 <button
                                     key={t}
                                     onClick={() => setTone(t)}
-                                    className={`flex flex-col items-center justify-center p-4 border rounded-xl transition-all ${emailTone === t
+                                    className={`flex flex-col items-center justify-center p-4 border rounded-xl transition-all ${tone === t
                                         ? "border-primary bg-primary/5 text-primary"
                                         : "border-slate-100 text-slate-500 hover:bg-slate-50"
                                         }`}
@@ -64,7 +64,7 @@ export default function PreferencesSection() {
                         <SettingsSelect
                             label="Primary CTA Type"
                             id="cta_type"
-                            value={primaryCtaType}
+                            value={ctaStyle}
                             onChange={setCtaType}
                             options={[
                                 { value: "Book a Meeting", label: "Book a Meeting" },

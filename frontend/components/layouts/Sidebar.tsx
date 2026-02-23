@@ -1,5 +1,6 @@
 "use client";
 
+import api from "@/lib/api";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -15,6 +16,7 @@ import {
     X
 } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
+import { useUserStore } from "@/store/useUserStore";
 
 const NAV_ITEMS = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -32,11 +34,18 @@ const SECONDARY_NAV = [
 export default function Sidebar() {
     const pathname = usePathname();
     const router = useRouter();
-    const { user, isSidebarOpen, setSidebarOpen, logout } = useAppStore();
+    const { isSidebarOpen, setSidebarOpen } = useAppStore();
+    const { user, logout } = useUserStore();
 
-    const handleLogout = () => {
-        logout();
-        router.push("/login");
+    const handleLogout = async () => {
+        try {
+            await api.post("/auth/logout");
+        } catch (error) {
+            console.error("Logout API failed", error);
+        } finally {
+            logout();
+            router.push("/login");
+        }
     };
 
     const creditPercentage = user ? Math.round((user.creditsRemaining / user.totalCredits) * 100) : 0;

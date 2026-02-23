@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+model User {
+  id                  String   @id @default(uuid())
+  email               String   @unique
+  password            String
+  onboardingComplete  Boolean  @default(false)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  profile             UserProfile?
+  outreachSettings    OutreachSettings?
+  businessContext     BusinessContext?
+  importPreference    DataImportPreference?
+  sessions            RefreshSession[]
+}
+
+model UserProfile {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  fullName    String
+  jobTitle    String
+  companyName String
+  companyWebsite String?
+  linkedinUrl String?
+  primaryRole String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model OutreachSettings {
+  id               String   @id @default(uuid())
+  userId           String   @unique
+  bookMeetings     Boolean  @default(false)
+  generateLeads    Boolean  @default(false)
+  buildBrand       Boolean  @default(false)
+  recruitTalent    Boolean  @default(false)
+  tonePreference   String
+  emailLength      String
+  ctaStyle         String
+  complianceEnabled Boolean @default(false)
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model BusinessContext {
+  id                String   @id @default(uuid())
+  userId            String   @unique
+  productDescription String
+  targetIndustry     String
+  companySize        String
+  decisionMakerRole  String
+  keyPainPoints      String
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model DataImportPreference {
+  id     String @id @default(uuid())
+  userId String @unique
+  method String
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model RefreshSession {
+  id        String   @id @default(uuid())
+  userId    String
+  tokenHash String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}

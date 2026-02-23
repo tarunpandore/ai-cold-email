@@ -1,35 +1,23 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { Camera, Sparkles, User as UserIcon } from "lucide-react";
 import SettingsCard from "./SettingsCard";
 import { SettingsInput, SettingsSelect } from "./SettingsForm";
-import { useAppStore } from "@/store/useAppStore";
+import { useUserStore } from "@/store/useUserStore";
 import { useSettingsStore } from "@/store/useSettingsStore";
 
 export default function ProfileSection() {
-    const { user } = useAppStore();
+    const { user } = useUserStore();
     const {
-        name, jobTitle, timezone, tone, ctaType,
-        updateField, setInitialState
+        fullName, jobTitle, tone, ctaStyle,
+        updateField
     } = useSettingsStore();
 
-    useEffect(() => {
-        // Initialize store with current user data if not already set
-        setInitialState({
-            name: user?.name || "Alexander Sterling",
-            jobTitle: "Director of Growth",
-            timezone: "UTC-5",
-            tone: "professional",
-            ctaType: "calendar"
-        });
-    }, [user, setInitialState]);
-
-    const setName = (val: string) => updateField("name", val);
+    const setFullName = (val: string) => updateField("fullName", val);
     const setJobTitle = (val: string) => updateField("jobTitle", val);
-    const setTimezone = (val: string) => updateField("timezone", val);
     const setTone = (val: string) => updateField("tone", val);
-    const setCtaType = (val: string) => updateField("ctaType", val);
+    // @ts-ignore
+    const setCtaStyle = (val: string) => updateField("ctaStyle", val);
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -38,7 +26,9 @@ export default function ProfileSection() {
                 <div className="flex items-center gap-6">
                     <div className="relative group">
                         <div className="w-24 h-24 rounded-full bg-primary/10 border-2 border-slate-200 overflow-hidden flex items-center justify-center">
+                            {/* @ts-ignore */}
                             {user?.avatar ? (
+                                // @ts-ignore
                                 <img src={user.avatar} alt="Profile" className="w-full h-full object-cover" />
                             ) : (
                                 <UserIcon size={40} className="text-primary/40" />
@@ -69,13 +59,13 @@ export default function ProfileSection() {
                     <SettingsInput
                         label="Full Name"
                         id="full_name"
-                        value={name}
-                        onChange={setName}
+                        value={fullName}
+                        onChange={setFullName}
                     />
                     <SettingsInput
                         label="Email Address"
                         id="email"
-                        value={user?.email || "alexander@heritage-saas.com"}
+                        value={user?.email || ""}
                         onChange={() => { }}
                         readOnly
                     />
@@ -84,18 +74,6 @@ export default function ProfileSection() {
                         id="job_title"
                         value={jobTitle}
                         onChange={setJobTitle}
-                    />
-                    <SettingsSelect
-                        label="Timezone"
-                        id="timezone"
-                        value={timezone}
-                        onChange={setTimezone}
-                        options={[
-                            { value: "UTC-5", label: "Eastern Standard Time (EST)" },
-                            { value: "UTC-8", label: "Pacific Standard Time (PST)" },
-                            { value: "UTC+0", label: "Greenwich Mean Time (GMT)" },
-                            { value: "UTC+1", label: "Central European Time (CET)" },
-                        ]}
                     />
                 </div>
             </SettingsCard>
@@ -131,10 +109,10 @@ export default function ProfileSection() {
 
                         <div className="flex flex-col gap-3">
                             <SettingsSelect
-                                label="Primary CTA Type"
-                                id="cta_type"
-                                value={ctaType}
-                                onChange={setCtaType}
+                                label="Primary CTA Style"
+                                id="cta_style"
+                                value={ctaStyle}
+                                onChange={setCtaStyle}
                                 options={[
                                     { value: "calendar", label: "Calendar Link (Direct Booking)" },
                                     { value: "open", label: "Open-Ended Question (Low Friction)" },

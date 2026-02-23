@@ -1,6 +1,7 @@
 "use client";
 
 import { useAppStore } from "@/store/useAppStore";
+import { useUserStore } from "@/store/useUserStore";
 import { Send, Zap, CheckCircle, Star } from "lucide-react";
 
 const ICON_MAP: Record<string, any> = {
@@ -11,7 +12,8 @@ const ICON_MAP: Record<string, any> = {
 };
 
 export default function Stats() {
-    const { user, stats } = useAppStore();
+    const { stats } = useAppStore();
+    const { user } = useUserStore();
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">

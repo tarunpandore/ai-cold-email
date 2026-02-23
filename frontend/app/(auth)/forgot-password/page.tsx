@@ -10,16 +10,29 @@ import {
   ChevronLeft,
   MailCheck
 } from "lucide-react";
+import api from "@/lib/api";
 
-export default function ResetPasswordPage() {
+export default function ForgotPasswordPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [email, setEmail] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulating email send
-    if (email) {
+    if (!email) return;
+
+    setIsLoading(true);
+    setError("");
+
+    try {
+      await api.post("/auth/forgot-password", { email });
       setIsSubmitted(true);
+    } catch (err: any) {
+      setError(err.response?.data?.error || "Failed to send reset link. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -69,12 +82,14 @@ export default function ResetPasswordPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
+                  {error && <p className="text-sm text-red-500 mt-1">{error}</p>}
                 </div>
                 <button
-                  className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-lg shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2"
+                  className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-lg shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2 disabled:opacity-70"
                   type="submit"
+                  disabled={isLoading}
                 >
-                  <span>Send Reset Link</span>
+                  <span>{isLoading ? "Sending..." : "Send Reset Link"}</span>
                   <ArrowRight size={18} />
                 </button>
               </form>

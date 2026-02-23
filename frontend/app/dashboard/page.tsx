@@ -5,11 +5,11 @@ import TopBar from "@/components/layouts/TopBar";
 import Stats from "@/components/dashboard/Stats";
 import DashboardCharts from "@/components/dashboard/DashboardCharts";
 import RecentActivity from "@/components/dashboard/RecentActivity";
-import { useAppStore } from "@/store/useAppStore";
+import { useSettingsStore } from "@/store/useSettingsStore";
 import DashboardFooter from "@/components/layouts/DashboardFooter";
 
 export default function DashboardPage() {
-    const user = useAppStore((state) => state.user);
+    const fullName = useSettingsStore((state) => state.fullName);
 
     return (
         <>
@@ -18,7 +18,7 @@ export default function DashboardPage() {
                 {/* Quick Actions / Welcome */}
                 <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
                     <div>
-                        <h3 className="text-lg md:text-xl font-bold text-slate-800 tracking-tight">Welcome back, {user?.name || "User"}</h3>
+                        <h3 className="text-lg md:text-xl font-bold text-slate-800 tracking-tight">Welcome back, {fullName ? fullName.split(" ")[0] : "User"}</h3>
                         <p className="text-sm text-slate-500">Here's what's happening with your outreach today.</p>
                     </div>
                     <div className="flex flex-col sm:flex-row w-full lg:w-auto gap-3">

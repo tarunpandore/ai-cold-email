@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Sparkles,
   User,
@@ -10,14 +11,51 @@ import {
   Eye,
   EyeOff,
   Star,
-  Check
+  Loader2
 } from "lucide-react";
+import api from "@/lib/api";
+import { useUserStore } from "@/store/useUserStore";
 
 export default function SignupPage() {
+  const router = useRouter();
+  const { setAccessToken, setUser } = useUserStore();
   const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  // Backend Integration: Handle user registration
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    try {
+      const response = await api.post("/auth/signup", {
+        email,
+        password,
+      });
+
+      const { accessToken } = response.data;
+
+      // Store token
+      setAccessToken(accessToken);
+
+      // Fetch user info to update store
+      const userRes = await api.get("/auth/me");
+      setUser(userRes.data);
+
+      // Redirect to onboarding as per navigation logic
+      router.push("/profile");
+    } catch (err: any) {
+      console.error(err);
+      setError(err.response?.data?.error || err.response?.data?.message || "Failed to create account. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const testimonials = [
     {
@@ -137,7 +175,12 @@ export default function SignupPage() {
           </div>
 
           {/* Registration Form */}
-          <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            {error && (
+              <div className="p-3 rounded-lg bg-rose-50 border border-rose-100 text-rose-600 text-sm font-medium animate-in fade-in zoom-in-95">
+                {error}
+              </div>
+            )}
             <div>
               <label className="block text-sm font-semibold text-background-dark mb-2" htmlFor="full-name">Full Name</label>
               <div className="relative group">
@@ -149,6 +192,7 @@ export default function SignupPage() {
                   id="full-name"
                   placeholder="John Doe"
                   type="text"
+                  required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
@@ -165,6 +209,7 @@ export default function SignupPage() {
                   id="email"
                   placeholder="john@company.com"
                   type="email"
+                  required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -180,6 +225,8 @@ export default function SignupPage() {
                   className="block w-full rounded-lg border border-primary/10 bg-white py-3 pl-11 pr-12 text-background-dark placeholder-primary/40 transition-all focus:border-primary focus:ring-1 focus:ring-primary outline-none"
                   id="password"
                   placeholder="••••••••"
+                  minLength={8}
+                  required
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -197,7 +244,7 @@ export default function SignupPage() {
 
             <div className="flex items-start">
               <div className="flex h-5 items-center">
-                <input className="h-4 w-4 rounded border-primary/10 text-primary focus:ring-primary cursor-pointer" id="terms" name="terms" type="checkbox" />
+                <input className="h-4 w-4 rounded border-primary/10 text-primary focus:ring-primary cursor-pointer" id="terms" name="terms" type="checkbox" required />
               </div>
               <div className="ml-3 text-sm">
                 <label className="text-primary/80 cursor-pointer" htmlFor="terms">
@@ -206,8 +253,19 @@ export default function SignupPage() {
               </div>
             </div>
 
-            <button className="w-full rounded-lg bg-primary py-4 text-center text-base font-bold text-white shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 hover:shadow-xl active:scale-[0.98]" type="submit">
-              Create Your Free Account
+            <button
+              disabled={loading}
+              className="w-full rounded-lg bg-primary py-4 text-center text-base font-bold text-white shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 hover:shadow-xl active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+              type="submit"
+            >
+              {loading ? (
+                <>
+                  <Loader2 size={20} className="animate-spin" />
+                  Creating Account...
+                </>
+              ) : (
+                "Create Your Free Account"
+              )}
             </button>
           </form>
 

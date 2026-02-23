@@ -2,7 +2,15 @@
 
 import { Rocket, Sparkles } from "lucide-react";
 
-export default function LaunchControlCard() {
+export default function LaunchControlCard({
+    onLaunch,
+    loading,
+    disabled,
+}: {
+    onLaunch: () => void;
+    loading: boolean;
+    disabled?: boolean;
+}) {
     return (
         <div className="bg-white rounded-xl border border-primary/5 shadow-xl overflow-hidden">
             <div className="bg-primary p-6 text-white relative overflow-hidden">
@@ -19,9 +27,22 @@ export default function LaunchControlCard() {
             </div>
 
             <div className="p-6 space-y-4">
-                <button className="w-full py-4 bg-primary text-white rounded-lg font-bold text-base hover:bg-primary/90 active:scale-[0.98] transition-all flex items-center justify-center gap-3 shadow-lg shadow-primary/20">
-                    <Sparkles size={18} />
-                    Generate Emails
+                <button
+                    onClick={onLaunch}
+                    disabled={loading || disabled}
+                    className="w-full py-4 bg-primary text-white rounded-lg font-bold text-base hover:bg-primary/90 active:scale-[0.98] transition-all flex items-center justify-center gap-3 shadow-lg shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    {loading ? (
+                        <>
+                            <div className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                            Processing...
+                        </>
+                    ) : (
+                        <>
+                            <Sparkles size={18} />
+                            Generate Emails
+                        </>
+                    )}
                 </button>
                 <div className="flex flex-col items-center">
                     <p className="text-[10px] text-slate-400 font-bold tracking-widest uppercase">Estimated Completion: 4 mins</p>

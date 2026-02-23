@@ -10,9 +10,17 @@ const CTA_OPTIONS = [
     { id: "resource", title: "Free Resource", desc: "Offers an ebook or whitepaper" },
 ];
 
-export default function MessagingStrategyForm() {
-    const [selectedCta, setSelectedCta] = useState("call");
-    const [abTest, setAbTest] = useState(true);
+export default function MessagingStrategyForm({
+    selectedCta,
+    setSelectedCta,
+    abTest,
+    setAbTest,
+}: {
+    selectedCta: string;
+    setSelectedCta: (v: string) => void;
+    abTest: boolean;
+    setAbTest: (v: boolean) => void;
+}) {
 
     return (
         <section className="bg-white rounded-xl border border-primary/5 p-6 shadow-sm">

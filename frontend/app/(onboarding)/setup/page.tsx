@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useOnboardingStore } from "@/store/useOnboardingStore";
+import { useUserStore } from "@/store/useUserStore";
 import { OnboardingProgress } from "@/components/onboarding/OnboardingProgress";
 import { OnboardingStepContainer } from "@/components/onboarding/OnboardingStepContainer";
 import {
@@ -10,8 +11,10 @@ import {
   RefreshCw as SyncIcon,
   ArrowRight as SkipIcon,
   Sparkles as MagicIcon,
-  MoveRight as ArrowIcon
+  MoveRight as ArrowIcon,
+  Loader2
 } from "lucide-react";
+import api from "@/lib/api";
 
 const methods = [
   {
@@ -42,25 +45,82 @@ const methods = [
 
 export default function DataSetupPage() {
   const router = useRouter();
-  const { data, updateData, setStep } = useOnboardingStore();
+  const { data, updateData, setStep, reset } = useOnboardingStore();
+  const { setUser } = useUserStore();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setStep(4);
   }, [setStep]);
 
-  const handleFinish = () => {
-    // In a real app, this would submit the data to the backend
-    console.log("Final Onboarding Data:", data);
-    router.push("/dashboard");
+  // Backend Integration: Submit full onboarding data
+  const handleFinish = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      // 1. Save Profile
+      await api.post("/onboarding/profile", {
+        fullName: data.fullName,
+        jobTitle: data.jobTitle,
+        companyName: data.companyName,
+        companyWebsite: data.companyWebsite,
+        linkedinUrl: data.linkedinUrl,
+        primaryRole: data.role,
+      });
+
+      // 2. Save Business Context
+      await api.post("/onboarding/business", {
+        productDescription: data.productDescription,
+        targetIndustry: data.targetIndustry,
+        companySize: data.companySize,
+        decisionMakerRole: data.decisionMakerRole,
+        keyPainPoints: data.keyPainPoints,
+      });
+
+      // 3. Save Outreach Settings
+      await api.post("/onboarding/outreach", {
+        bookMeetings: data.goals.includes("book-meetings"),
+        generateLeads: data.goals.includes("generate-leads"),
+        buildBrand: data.goals.includes("build-brand"),
+        recruitTalent: data.goals.includes("recruit-talent"),
+        tonePreference: data.tone,
+        emailLength: data.emailLength,
+        ctaStyle: data.ctaStyle,
+        complianceEnabled: data.complianceAccepted,
+      });
+
+      // 4. Save Import Preference (This triggers onboardingComplete = true in the backend)
+      await api.post("/onboarding/import", {
+        method: (data.importMethod || "SKIP").toUpperCase(),
+      });
+
+      // Update user state to reflect onboarding completion
+      const userRes = await api.get("/auth/me");
+      setUser(userRes.data.data);
+
+      // Clear onboarding store
+      reset();
+
+      // Redirect to dashboard welcome screen (only seen once)
+      router.push("/dashboard/welcome");
+    } catch (err: any) {
+      setError(err.response?.data?.message || err.response?.data?.error || "Failed to complete onboarding. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <OnboardingStepContainer
       onNext={handleFinish}
-      nextLabel="Finish Setup"
+      nextLabel={loading ? "Finishing..." : "Finish Setup"}
       showBack
       backHref="/email-preferences"
       isLastStep
+      // @ts-ignore - added loading state to button disabled logic if component supports it
+      disabled={loading}
     >
       <OnboardingProgress
         title="How would you like to import your data?"
@@ -69,6 +129,12 @@ export default function DataSetupPage() {
       />
 
       <div className="space-y-12">
+        {error && (
+          <div className="p-4 rounded-xl bg-rose-50 border border-rose-100 text-rose-600 text-sm font-medium">
+            {error}
+          </div>
+        )}
+
         {/* Setup Options Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {methods.map((method) => (
@@ -125,7 +191,7 @@ export default function DataSetupPage() {
             </p>
           </div>
           <a href="#" className="whitespace-nowrap inline-flex items-center gap-2 text-sm font-bold leading-normal tracking-wide text-primary hover:underline group">
-            View formatting tips
+            {loading ? <Loader2 className="animate-spin size-5" /> : "View formatting tips"}
             <ArrowIcon className="size-5 group-hover:translate-x-1 transition-transform" />
           </a>
         </div>
