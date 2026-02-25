@@ -17,8 +17,8 @@ const authRoutes = ["/login", "/signup"];
 export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
-    // Read the HttpOnly refresh token from cookies
-    const hasRefreshToken = request.cookies.has("refreshToken");
+    // Read auth state either from the cross-domain frontend cookie or the backend HttpOnly cookie if they share domains
+    const hasAuthCookie = request.cookies.has("isAuth") || request.cookies.has("refreshToken");
 
     // Check if the current route is protected
     const isProtectedRoute = protectedRoutes.some(
@@ -29,14 +29,14 @@ export function middleware(request: NextRequest) {
     const isAuthRoute = authRoutes.some((route) => pathname === route);
 
     // Redirect unauthenticated users navigating to protected routes to /login
-    if (isProtectedRoute && !hasRefreshToken) {
+    if (isProtectedRoute && !hasAuthCookie) {
         const url = request.nextUrl.clone();
         url.pathname = "/login";
         return NextResponse.redirect(url);
     }
 
     // Redirect authenticated users navigating to auth routes to /dashboard
-    if (isAuthRoute && hasRefreshToken) {
+    if (isAuthRoute && hasAuthCookie) {
         const url = request.nextUrl.clone();
         url.pathname = "/dashboard";
         return NextResponse.redirect(url);
