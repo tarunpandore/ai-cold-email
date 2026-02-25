@@ -15,10 +15,12 @@ import {
 } from "lucide-react";
 import api from "@/lib/api";
 import { useUserStore } from "@/store/useUserStore";
+import { useOnboardingStore } from "@/store/useOnboardingStore";
 
 export default function SignupPage() {
   const router = useRouter();
   const { setAccessToken, setUser } = useUserStore();
+  const { updateData } = useOnboardingStore();
   const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -48,6 +50,7 @@ export default function SignupPage() {
       setUser(userRes.data);
 
       // Redirect to onboarding as per navigation logic
+      updateData({ fullName: name });
       router.push("/profile");
     } catch (err: any) {
       console.error(err);
