@@ -8,6 +8,8 @@ import { settingsRouter } from "./modules/settings/settings.routes";
 
 export const app = express();
 
+app.set("trust proxy", 1);
+
 const corsOptions = {
   origin: process.env.FRONTEND_URL || "http://localhost:3000",
   credentials: true,
